@@ -1,6 +1,6 @@
 [package]
 name = "zmq-sys"
-version = "0.12.0"
+version = "0.13.0"
 authors = [
     "a.rottmann@gmx.at",
     "erick.tryzelaar@gmail.com",
@@ -20,7 +20,7 @@ libc = "0.2.15"
 
 [build-dependencies]
 system-deps = "6"
-zeromq-src = { version = "0.3.3+4.3.5" }
+zeromq-src = { git = "ssh://git@github.com/vibe-ad/zeromq-src-rs", branch = "ts/feat/vibe" }
 
 [package.metadata.system-deps]
 libzmq = "4.3.5"
