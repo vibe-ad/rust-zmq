@@ -725,6 +725,28 @@ impl Socket {
         Ok(())
     }
 
+    /// Receive bytes into a `BufMut`. The length passed to `zmq_recv` is the
+    /// length of the `chunk_mut()` slice. The return value is the number of
+    /// bytes in the message, which may be larger than the length of the slice,
+    /// indicating truncation.
+    ///
+    /// Requires the `bytes` feature.
+    #[cfg(feature = "bytes")]
+    pub fn recv_buf<B: bytes::BufMut>(&self, mut buf: B, flags: i32) -> Result<usize> {
+        let bytes = buf.chunk_mut();
+        let bytes_ptr = bytes.as_mut_ptr() as *mut c_void;
+        let rc = zmq_try!(unsafe {
+            zmq_sys::zmq_recv(self.sock, bytes_ptr, bytes.len(), flags as c_int)
+        });
+        let msg_size = rc as usize;
+        let len = msg_size.min(bytes.len());
+        // SAFETY: This is safe because we've set `len` to the actual read size.
+        unsafe {
+            buf.advance_mut(len);
+        }
+        Ok(msg_size)
+    }
+
     /// Receive bytes into a slice. The length passed to `zmq_recv` is the length of the slice. The
     /// return value is the number of bytes in the message, which may be larger than the length of
     /// the slice, indicating truncation.
