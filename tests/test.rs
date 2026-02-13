@@ -608,3 +608,44 @@ mod compile {
         run_mode("compile-fail");
     }
 }
+
+#[cfg(feature = "bytes")]
+mod bytes {
+    use bytes::BytesMut;
+
+    use super::create_socketpair;
+
+    test!(test_recv_buf_truncation, {
+        let (sender, receiver) = create_socketpair();
+        sender.send("bar", 0).unwrap();
+        assert_eq!(receiver.recv_bytes(0).unwrap(), b"bar");
+
+        let text = "a quite long string";
+
+        receiver.send(text, 0).unwrap();
+        let mut buf = BytesMut::with_capacity(10);
+        let len = sender.recv_buf(&mut buf, 0).unwrap(); // this should truncate the message
+
+        assert_eq!(len, text.len());
+        assert_eq!(buf.len(), 10);
+
+        assert_eq!(&buf[..], b"a quite lo");
+    });
+
+    test!(test_recv_buf, {
+        let (sender, receiver) = create_socketpair();
+        sender.send("bar", 0).unwrap();
+        assert_eq!(receiver.recv_bytes(0).unwrap(), b"bar");
+
+        let text = "a quite long string";
+
+        receiver.send(text, 0).unwrap();
+        let mut buf = BytesMut::with_capacity(128);
+        let len = sender.recv_buf(&mut buf, 0).unwrap(); // this should truncate the message
+
+        assert_eq!(len, text.len());
+        assert_eq!(buf.len(), text.len());
+
+        assert_eq!(&buf[..], text.as_bytes());
+    });
+}
