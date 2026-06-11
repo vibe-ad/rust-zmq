@@ -235,6 +235,13 @@ test!(test_getset_rcvhwm, {
     assert_eq!(sock.get_rcvhwm().unwrap(), 500);
 });
 
+test!(test_getset_tcp_max_pacing_rate, {
+    let ctx = Context::new();
+    let sock = ctx.socket(PUSH).unwrap();
+    sock.set_tcp_max_pacing_rate(125_000_000).unwrap();
+    assert_eq!(sock.get_tcp_max_pacing_rate().unwrap(), 125_000_000);
+});
+
 test!(test_getset_affinity, {
     let ctx = Context::new();
     let sock = ctx.socket(REQ).unwrap();
