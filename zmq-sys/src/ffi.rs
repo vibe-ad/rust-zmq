@@ -111,6 +111,12 @@ pub const ZMQ_USE_FD: u32 = 89;
 pub const ZMQ_GSSAPI_PRINCIPAL_NAMETYPE: u32 = 90;
 pub const ZMQ_GSSAPI_SERVICE_PRINCIPAL_NAMETYPE: u32 = 91;
 pub const ZMQ_BINDTODEVICE: u32 = 92;
+/// Per-socket read batch size in bytes: max bytes a single `recv` drains from
+/// one connection per I/O-thread wakeup (decoder buffer size). Default 8192.
+pub const ZMQ_IN_BATCH_SIZE: u32 = 101;
+/// Per-socket write batch size in bytes: max bytes coalesced into one `send`
+/// per I/O-thread wakeup (encoder buffer size). Default 8192.
+pub const ZMQ_OUT_BATCH_SIZE: u32 = 102;
 pub const ZMQ_MORE: u32 = 1;
 pub const ZMQ_SHARED: u32 = 3;
 pub const ZMQ_DONTWAIT: u32 = 1;
