@@ -242,6 +242,20 @@ test!(test_getset_tcp_max_pacing_rate, {
     assert_eq!(sock.get_tcp_max_pacing_rate().unwrap(), 125_000_000);
 });
 
+test!(test_getset_in_batch_size, {
+    let ctx = Context::new();
+    let sock = ctx.socket(PULL).unwrap();
+    sock.set_in_batch_size(256 * 1024).unwrap();
+    assert_eq!(sock.get_in_batch_size().unwrap(), 256 * 1024);
+});
+
+test!(test_getset_out_batch_size, {
+    let ctx = Context::new();
+    let sock = ctx.socket(PUSH).unwrap();
+    sock.set_out_batch_size(256 * 1024).unwrap();
+    assert_eq!(sock.get_out_batch_size().unwrap(), 256 * 1024);
+});
+
 test!(test_getset_affinity, {
     let ctx = Context::new();
     let sock = ctx.socket(REQ).unwrap();

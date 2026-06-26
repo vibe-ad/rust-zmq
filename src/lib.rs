@@ -813,6 +813,8 @@ impl Socket {
         (get_recovery_ivl, set_recovery_ivl) => ZMQ_RECOVERY_IVL as i32,
         (get_sndbuf, set_sndbuf) => ZMQ_SNDBUF as i32,
         (get_tcp_max_pacing_rate, set_tcp_max_pacing_rate) => ZMQ_TCP_MAX_PACING_RATE as i32,
+        (get_in_batch_size, set_in_batch_size) => ZMQ_IN_BATCH_SIZE as i32,
+        (get_out_batch_size, set_out_batch_size) => ZMQ_OUT_BATCH_SIZE as i32,
         (get_rcvbuf, set_rcvbuf) => ZMQ_RCVBUF as i32,
         (get_tos, set_tos) => ZMQ_TOS as i32,
         (get_linger, set_linger) => ZMQ_LINGER as i32,
