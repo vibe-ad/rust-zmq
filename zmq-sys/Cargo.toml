@@ -20,7 +20,7 @@ libc = "0.2.15"
 
 [build-dependencies]
 system-deps = "6"
-zeromq-src = { git = "ssh://git@github.com/vibe-ad/zeromq-src-rs", branch = "ts/feat/io-batch-size" }
+zeromq-src = { git = "ssh://git@github.com/vibe-ad/zeromq-src-rs", tag = "vibe-fork-20260826" }
 
 [package.metadata.system-deps]
 libzmq = "4.3.5"
