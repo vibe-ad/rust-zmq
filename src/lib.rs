@@ -446,6 +446,60 @@ impl Context {
         Ok(())
     }
 
+    /// Add a CPU to the affinity list of the context's background threads.
+    ///
+    /// Only takes effect before the first socket is created on the context,
+    /// and only on Linux.
+    pub fn add_thread_affinity_cpu(&self, cpu: i32) -> Result<()> {
+        zmq_try!(unsafe {
+            zmq_sys::zmq_ctx_set(self.raw.ctx, zmq_sys::ZMQ_THREAD_AFFINITY_CPU_ADD as _, cpu)
+        });
+        Ok(())
+    }
+
+    /// Remove a CPU from the affinity list of the context's background
+    /// threads. Removing a CPU that is not in the list is an error.
+    pub fn remove_thread_affinity_cpu(&self, cpu: i32) -> Result<()> {
+        zmq_try!(unsafe {
+            zmq_sys::zmq_ctx_set(
+                self.raw.ctx,
+                zmq_sys::ZMQ_THREAD_AFFINITY_CPU_REMOVE as _,
+                cpu,
+            )
+        });
+        Ok(())
+    }
+
+    /// Whether each I/O thread is pinned to a single CPU of the affinity list.
+    pub fn get_thread_affinity_cpu_pin(&self) -> Result<bool> {
+        let rc = zmq_try!(unsafe {
+            zmq_sys::zmq_ctx_get(self.raw.ctx, zmq_sys::ZMQ_THREAD_AFFINITY_CPU_PIN as _)
+        });
+        Ok(rc != 0)
+    }
+
+    /// Pin each I/O thread to a single CPU of the affinity list.
+    ///
+    /// By default the whole list is applied as one mask to every background
+    /// thread, so N I/O threads share N CPUs and the scheduler may run
+    /// several of them on the same CPU and migrate them as a group. When
+    /// enabled, I/O thread `n` instead gets the `n`-th CPU of the list in
+    /// ascending order -- the same CPU selected by bit `n` of the socket
+    /// option [`Socket::set_affinity`].
+    ///
+    /// Only takes effect before the first socket is created on the context,
+    /// and only on Linux.
+    pub fn set_thread_affinity_cpu_pin(&self, value: bool) -> Result<()> {
+        zmq_try!(unsafe {
+            zmq_sys::zmq_ctx_set(
+                self.raw.ctx,
+                zmq_sys::ZMQ_THREAD_AFFINITY_CPU_PIN as _,
+                i32::from(value),
+            )
+        });
+        Ok(())
+    }
+
     /// Create a new socket.
     ///
     /// Note that the returned socket keeps a an `Arc` reference to

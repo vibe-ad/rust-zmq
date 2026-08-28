@@ -553,6 +553,24 @@ test!(test_get_fd, {
     assert_ne!(fds_a[0], fds_b[0]);
 });
 
+test!(test_ctx_thread_affinity, {
+    let ctx = Context::new();
+    ctx.add_thread_affinity_cpu(0).unwrap();
+    ctx.add_thread_affinity_cpu(1).unwrap();
+    ctx.remove_thread_affinity_cpu(1).unwrap();
+    // removing a CPU that is not in the list fails
+    assert!(ctx.remove_thread_affinity_cpu(1).is_err());
+});
+
+test!(test_getset_thread_affinity_cpu_pin, {
+    let ctx = Context::new();
+    assert!(!ctx.get_thread_affinity_cpu_pin().unwrap());
+    ctx.set_thread_affinity_cpu_pin(true).unwrap();
+    assert!(ctx.get_thread_affinity_cpu_pin().unwrap());
+    ctx.set_thread_affinity_cpu_pin(false).unwrap();
+    assert!(!ctx.get_thread_affinity_cpu_pin().unwrap());
+});
+
 test!(test_ctx_nohang, {
     // Test that holding on to a socket keeps the context it was
     // created from from being destroyed. Destroying the context while
