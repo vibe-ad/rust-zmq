@@ -10,7 +10,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2.8.0
       - name: Cargo build
         run: cargo build --workspace --all-targets
   test:
@@ -20,7 +20,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2.8.0
       - name: Cargo test
         run: cargo test --workspace --all-targets
   lint:
@@ -30,6 +30,6 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2.8.0
       - name: Cargo clippy
         run: cargo clippy --workspace --all-targets -- -D warnings
